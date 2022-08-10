@@ -10,16 +10,16 @@
   + Postgresql
   + Java
   
-# Projetos
+## Projetos
 ![dev projetos](https://user-images.githubusercontent.com/84943777/184042568-db616707-bb6c-4bec-84d1-2fed2321b092.PNG)
 
-# Cargos
+## Cargos
 ![dev cargos](https://user-images.githubusercontent.com/84943777/184042591-abe4d78f-6701-40ab-89b1-0eb1feebf3fb.PNG)
 
-# Linguagens
+## Linguagens
 ![dev linguagens](https://user-images.githubusercontent.com/84943777/184042605-0bcd9fb8-75d6-41a1-8d1a-87210284b5b6.PNG)
 
-# Funcionários
+## Funcionários
 ![funcionarios](https://user-images.githubusercontent.com/84943777/184042630-cf6fa997-a886-4050-ba51-082e990b7ec8.PNG)
 
 ## Telas de Cadastro
