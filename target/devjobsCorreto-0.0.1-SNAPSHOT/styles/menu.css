@@ -1,0 +1,39 @@
+@charset "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.menu {
+	height: 100%;
+	position: fixed;
+}
+
+.menu.ui-widget {
+	border-radius: 0;
+	border: 0;
+	padding: 0;
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+	margin-right: 200px;
+}
+
+.ui-menuitem.ui-widget:hover {
+	background-color: var(--primary-hover) !important;
+	color: white !important;
+}
+
+.ui-menuitem.ui-widget:focus {
+	background-color: var(--primary-hover) !important;
+	color: white !important;
+}
+
+.ui-menuitem-text {
+	color: #a8a8a8 !important;
+}
+
+#nome-site-menu {
+	text-align: center;
+}

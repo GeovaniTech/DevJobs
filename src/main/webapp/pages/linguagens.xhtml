@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+ 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:components="http://java.sun.com/jsf/composite/components">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Linguagens de Programação</title>
+</h:head>
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="content">
+			<h2 id="texto-page-atual">DevJobs - Linguagens</h2>
+			
+			<h:form id="painel">
+				<components:painelLinguagensAtuais visibilidadeAdicionar="none" />
+			</h:form>
+
+			<!-- Dialog Cadastrar Linguagem -->
+			<components:dialogsCadastrarAlterar 
+				header="Cadastrar Linguagem"
+				widgetVar="dialog-nova-linguagem" 
+				value_button="Cadastrar"
+				funcao_button="#{linguagemMB.salvar()}"
+				novo_update="painel"
+				oncomplete="PF('tableLinguagem').filter()">
+
+				<p:inputText 
+					value="#{linguagemMB.linguagemTo.nome}" 
+					placeholder="Nome" 
+					style="margin-top: 3px;" />
+					
+				<p:inputText
+					value="#{linguagemMB.linguagemTo.versao}"
+					placeholder="Versão" />
+				
+				<p:inputText 
+					value="#{linguagemMB.linguagemTo.url_icone}"
+					placeholder="Ícone flaticon" />
+			</components:dialogsCadastrarAlterar>
+			
+			<!-- Dialog Alterar Linguagem -->
+			<h:panelGroup id="dialog-alterar">
+				<components:dialogsCadastrarAlterar 
+					header="Altere as informações"
+					widgetVar="dialog-alterar-linguagem" 
+					value_button="Alterar"
+					funcao_button="#{linguagemMB.alterar()}"
+					novo_update="painel"
+					oncomplete="PF('tableLinguagem').filter()">
+
+					<p:inputText 
+						value="#{linguagemMB.linguagemSelecionada.nome}" 
+						placeholder="Nome" 
+						style="margin-top: 3px;" />
+					
+					<p:inputNumber 
+						value="#{linguagemMB.linguagemSelecionada.versao}" 
+						placeholder="Versão" />
+					
+					<p:inputText 
+						value="#{linguagemMB.linguagemSelecionada.url_icone}" 
+						placeholder="Ícone" />
+				</components:dialogsCadastrarAlterar>
+			</h:panelGroup>
+			
+			<h:form id="crud">
+				<components:crudTabela 
+					disable="#{!linguagemMB.possuiLinguagemSelecionada()}"
+					adicionar="PF('dialog-nova-linguagem').show()"
+					alterar="PF('dialog-alterar-linguagem').show()"
+					excluir="#{linguagemMB.remover()}"
+					oncomplete="PF('tableLinguagem').filter()"
+					novo_update="painel"
+					nullObjeto="#{linguagemMB.setarLinguagemSelecionadaNull()}"
+					unselectRow="PF('tableLinguagem').unselectAllRows()" />
+			</h:form>
+			
+			<h:form id="form-tabela">
+				<p:dataTable
+					var="linguagem" 
+					value="#{linguagemMB.linguagens}"
+					widgetVar="tableLinguagem"
+					id="table-linguagem"
+					selection="#{linguagemMB.linguagemSelecionada}"
+					selectionMode="single"
+					rowKey="#{linguagem.id}"
+					filteredValue="#{linguagemMB.linguagens_filtradas}"
+					globalFilterOnly="#{linguagemMB.globalFilterOnly}">
+					
+					<f:facet name="header">
+						<p:inputText 
+							id="globalFilter"
+							onkeyup="PF('tableLinguagem').filter()"
+							placeholder="Pesquisar" />
+					</f:facet>
+					
+					<p:ajax 
+						event="rowDblselect"
+						listener="#{linguagemMB.setarLinguagemSelecionadaNull()}" 
+						oncomplete="PF('tableLinguagem').unselectAllRows()"
+						update=":crud" />
+					
+					<p:ajax 
+						event="rowSelect"
+						listener="#{linguagemMB.possuiLinguagemSelecionada()}"
+						update=":crud, :dialog-alterar" />
+						
+					<p:ajax 
+						event="rowUnselect"
+						listener="#{linguagemMB.possuiLinguagemSelecionada()}"
+						update=":crud, :dialog-alterar" />
+					
+					<p:column field="nome" headerText="Nome" />
+					<p:column field="versao" headerText="Versão"/>
+					<p:column field="url_icone" headerText="Ícone"/>
+				</p:dataTable>
+			</h:form>	
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

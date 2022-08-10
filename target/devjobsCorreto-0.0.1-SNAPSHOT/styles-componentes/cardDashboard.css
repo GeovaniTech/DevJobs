@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+#card {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	background-color: var(--primary-color);
+	padding: 20px;
+	border-radius: 8px;
+	color: white;
+	max-width: 315px;
+	width: 400px;
+	margin: 5px;
+}
+
+#card-valor {
+	color: white;
+	font-size: 2em;
+	font-weight: bold;
+}
+
+#card-texto {
+	font-size: 1em;
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	<h:head>
+		<meta 
+			http-equiv="Content-Type"
+			content="text/html; charset=UTF-8" />
+		<title>Painel de Linguagens de Programação</title>
+	</h:head>
+	<h:body>
+		<composite:interface>
+			<composite:attribute name="btnAdicionarVisible" />
+			<composite:attribute name="actionAdicionar" />
+			<composite:attribute name="valueAdicionar" />
+			<composite:attribute name="visibilidadeAdicionar" />
+		</composite:interface>
+		
+		<composite:implementation>
+			<div id="main-card-painel-linguagem">
+				<p:repeat var="linguagem" value="#{linguagemMB.linguagens}">
+					<div id="card-linguagem">
+						<i class="#{linguagem.url_icone}" id="icone-linguagens" />
+						
+						<h:outputText 
+							value="#{linguagem.nome}"
+							style="font-size: 1.7em;" />
+						
+						<h:outputText 
+							value="#{linguagem.versao}"
+							style="font-size: 1em;" />
+						
+						<p:commandButton
+							value="#{cc.attrs.valueAdicionar}"
+							action="#{cc.attrs.actionAdicionar}" 
+							icon="pi pi-plus"
+							style=" margin: 10px; display: #{cc.attrs.visibilidadeAdicionar};" />
+					</div>
+				</p:repeat>
+			</div>
+		</composite:implementation>
+	</h:body>
+</html>

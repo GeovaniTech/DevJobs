@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:components="http://java.sun.com/jsf/composite/components">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Cargos</title>
+</h:head>
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="content">
+			<!-- Dialog Novo Cargo -->
+			<components:dialogsCadastrarAlterar 
+				header="Cadastrar Cargo"
+				widgetVar="dialog-novo-cargo" 
+				value_button="Cadastrar"
+				funcao_button="#{cargoMB.salvarCargo()}"
+				oncomplete="PF('cargoTable').filter()">
+
+				<p:inputText 
+					value="#{cargoMB.cargoTo.nome}" 
+					placeholder="Cargo" 
+					style="margin-top: 3px;" />
+					
+				<p:inputNumber 
+					value="#{cargoMB.cargoTo.salario_base}" 
+					placeholder="Salário R$ 0,00" />
+				
+				<p:selectBooleanCheckbox 
+					style="margin-top: 5px; margin-bottom: 10px;"
+					value="#{cargoMB.cargoTo.dominarLinguagemObrigatorio}" 
+					itemLabel="Necessário Dominar Linguagem" />
+			</components:dialogsCadastrarAlterar>
+			
+			<!-- Dialog Alterar Cargo -->
+			<h:panelGroup id="dialog-alterar">
+				<components:dialogsCadastrarAlterar 
+					header="Altere as Informações"
+					widgetVar="dialog-alterar-cargo" 
+					value_button="Alterar"
+					funcao_button="#{cargoMB.alterarCargo()}"
+					oncomplete="PF('cargoTable').filter()">
+
+					<p:inputText 
+						value="#{cargoMB.cargoSelecionado.nome}" 
+						placeholder="Cargo"
+						style="margin-top: 3px;" />
+					
+					<p:inputNumber 
+						value="#{cargoMB.cargoSelecionado.salario_base}" 
+						placeholder="Salário Base" />
+						
+					<p:selectBooleanCheckbox 
+						style="margin-top: 5px; margin-bottom: 10px;"
+						value="#{cargoMB.cargoSelecionado.dominarLinguagemObrigatorio}" 
+						itemLabel="Necessário Dominar Linguagem" />
+				</components:dialogsCadastrarAlterar>
+			</h:panelGroup>
+
+			<h2 id="texto-page-atual">DevJobs - Cargos</h2>
+				
+			<h:form id="crud">
+				<components:crudTabela 
+					disable="#{!cargoMB.possuiCargoSelecionado()}"
+					adicionar="PF('dialog-novo-cargo').show()"
+					alterar="PF('dialog-alterar-cargo').show()"
+					excluir="#{cargoMB.removerCargo()}"
+					oncomplete="PF('cargoTable').filter()"
+					unselectRow="PF('cargoTable').unselectAllRows()"
+					nullObjeto="#{cargoMB.setarCargoSelecionadoNull()}" />
+			</h:form>
+			
+			<h:form id="form-tabela">
+				<p:dataTable 
+					var="cargo" 
+					widgetVar="cargoTable"
+					value="#{cargoMB.cargos}"
+					id="table-cargos"
+					selection="#{cargoMB.cargoSelecionado}" 
+					selectionMode="single"
+					rowKey="#{cargo.id}"
+					filteredValue="#{cargoMB.cargos_filtrados}"
+					globalFilterOnly="#{cargoMB.globalFilterOnly}">
+					
+					<f:facet name="header">
+						<p:inputText 
+							id="globalFilter"
+							onkeyup="PF('cargoTable').filter()" 
+							placeholder="Pesquisar" />
+					</f:facet>
+					
+					<p:ajax 
+						event="rowDblselect"
+						listener="#{cargoMB.setarCargoSelecionadoNull()}" 
+						oncomplete="PF('cargoTable').unselectAllRows()"
+						update="crud" />
+					
+					<p:ajax 
+						event="rowSelect" 
+						listener="#{cargoMB.possuiCargoSelecionado()}" 
+						update=":crud, :dialog-alterar" />
+					
+					<p:ajax 
+						event="rowUnselect" 
+						listener="#{cargoMB.possuiCargoSelecionado()}" 
+						update=":crud, :dialog-alterar" />
+
+					<p:column field="nome" headerText="Cargo" />
+					<p:column field="salario_base" headerText="Salário Base" />
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

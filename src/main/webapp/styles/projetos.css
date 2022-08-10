@@ -1,0 +1,29 @@
+@charset "UTF-8";
+
+#main-card {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+#componentes-auxiliares {
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	align-items: center;
+}
+
+#h2-painel-novo-projeto {
+	margin-bottom: 15px;
+	margin-top: 15px;
+}
+
+.requisitos {
+	display: flex; 
+	flex-direction: column; 
+	align-items: left; 
+	justify-content: left; 
+	width: 500px;
+}

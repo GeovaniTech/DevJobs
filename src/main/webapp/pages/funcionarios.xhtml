@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:components="http://java.sun.com/jsf/composite/components">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Funcionários</title>
+</h:head>
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="content">
+			<!-- Dialog Cadastrar Funcionario -->
+			<components:dialogsCadastrarAlterar 
+				header="Cadastrar Funcionário"
+				widgetVar="dialog-novo-funcionario"
+				value_button="Cadastrar"
+				funcao_button="#{funcionarioMB.salvar()}"
+				width="500"
+				oncomplete="PF('tableFuncionario').filter()">
+				
+				<h:panelGrid columns="2" width="400" id="panel-campos">
+					<h:outputText value="Nome Completo: " />
+					<p:inputText 
+						placeholder="Nome Completo" 
+						value="#{funcionarioMB.funcionarioTo.nome}" />
+
+					<h:outputText value="Data de Nascimento: " />
+					<p:datePicker 
+						placeholder="Selecionar Data" 
+						mask="99/99/9999" 
+						value="#{funcionarioMB.funcionarioTo.data_nascimento}" />
+
+					<h:outputText value="Cargo:" />
+					<p:selectOneMenu 
+						style="width: 199px;" 
+						value="#{funcionarioMB.funcionarioTo.cargo}"
+						converter="simpleEntityConverter"
+						required="true">
+						
+						<f:selectItems 
+							value="#{cargoMB.cargos}" 
+							var="cargo" 
+							itemLabel="#{cargo.nome}" 
+							itemValue="#{cargo}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Linguagens Domínio:" />
+					<p:selectManyMenu 
+						value="#{funcionarioMB.funcionarioTo.linguagens_dominio}" 
+						showCheckbox="true"
+						converter="simpleEntityConverter">
+						
+						<f:selectItems 
+							value="#{linguagemMB.linguagens}" 
+							var="linguagem"
+							itemLabel="#{linguagem.nome}"
+							itemValue="#{linguagem}" />
+					</p:selectManyMenu>
+				</h:panelGrid>
+			</components:dialogsCadastrarAlterar>
+			
+			<!-- Dialog Alterar Funcionario -->
+			<h:panelGroup id="dialog-alterar">
+				<components:dialogsCadastrarAlterar 
+					header="Altere as informações"
+					widgetVar="dialog-alterar-funcionario"
+					value_button="Alterar"
+					funcao_button="#{funcionarioMB.alterar()}"
+					width="500"
+					oncomplete="PF('tableFuncionario').filter()">
+					
+					<h:panelGrid columns="2" width="400">
+						<h:outputText value="Nome Completo: " />
+						<p:inputText 
+							placeholder="Nome Completo" 
+							value="#{funcionarioMB.funcionarioSelecionado.nome}" />
+	
+						<h:outputText value="Data Nascimento" />
+						<p:datePicker 
+							value="#{funcionarioMB.funcionarioSelecionado.data_nascimento}" 
+							placeholder="Selecionar Data" 
+							mask="99/99/9999" />
+						
+						<h:outputText value="Cargo:" />
+						<p:selectOneMenu
+							value="#{funcionarioMB.funcionarioSelecionado.cargo}"
+							converter="simpleEntityConverter"
+							style="width: 199px;">
+							
+							<f:selectItems 
+								value="#{cargoMB.cargos}" 
+								var="cargo"
+								itemLabel="#{cargo.nome}" 
+								itemValue="#{cargo}" />
+						</p:selectOneMenu>
+	
+						<h:outputText value="Linguagens Domínio:" />
+						
+						<p:selectManyMenu 
+							value="#{funcionarioMB.linguagens_id}" 
+							showCheckbox="true">
+							
+							<f:selectItems 
+								value="#{linguagemMB.linguagens}"
+								var="lin"
+								itemLabel="#{lin.nome}"
+								itemValue="#{lin.id}" />
+						</p:selectManyMenu>
+					</h:panelGrid>
+				</components:dialogsCadastrarAlterar>
+			</h:panelGroup>
+
+			<h2 id="texto-page-atual">DevJobs - Funcionários</h2>
+			
+			<h:form id="crud">
+				<components:crudTabela
+					disable="#{!funcionarioMB.possuiFuncionarioSelecionado()}"
+					excluir="#{funcionarioMB.remover()}"
+					alterar="PF('dialog-alterar-funcionario').show()"
+					adicionar="PF('dialog-novo-funcionario').show()"
+					oncomplete="PF('tableFuncionario').filter()"
+					unselectRow="PF('tableFuncionario').unselectAllRows()"
+					nullObjeto="#{funcionarioMB.setarFuncionarioSelecionadoNull()}" />
+			</h:form>
+
+			<h:form id="form-tabela">
+				<p:dataTable 
+					var="funcionario"
+					widgetVar="tableFuncionario"
+					id="table-funcionario" 
+					value="#{funcionarioMB.funcionarios}"
+					selection="#{funcionarioMB.funcionarioSelecionado}"
+					selectionMode="single" 
+					rowKey="#{funcionario.id}"
+					filteredValue="#{funcionarioMB.funcionarios_filtrados}"
+					globalFilterOnly="#{funcionarioMB.globalFilterOnly}">
+					
+					<f:facet name="header">
+						<div class="filtros">
+							<p:inputText 
+								id="globalFilter" 
+								placeholder="Pesquisar" 
+								onkeyup="PF('tableFuncionario').filter()" />
+							
+							<components:filtro
+								selectValue="#{funcionarioMB.linguagemFiltrada}"
+								funcaoFiltro="#{funcionarioMB.filtrarLinguagem()}"
+								itemLabelTodos="Filtrar Linguagem"
+								listaObjetos="#{linguagemMB.linguagens}"
+								oncompleteTabela="PF('tableFuncionario').filter()" />
+						</div>
+					</f:facet>
+					
+					
+					
+					<p:ajax 
+						event="rowDblselect"
+						listener="#{funcionarioMB.setarFuncionarioSelecionadoNull()}" 
+						oncomplete="PF('tableFuncionario').unselectAllRows()"
+						update="crud" />
+					
+					<p:ajax 
+						event="rowSelect" 
+						listener="#{funcionarioMB.possuiFuncionarioSelecionado()}" 
+						update="crud, :dialog-alterar" />
+						
+					<p:ajax 
+						event="rowUnselect" 
+						listener="#{funcionarioMB.possuiFuncionarioSelecionado()}" 
+						update="crud, :dialog-alterar" />
+
+					<p:column field="nome" headerText="Funcionário" />
+
+					<p:column field="data_nascimento" headerText="Data Nascimento">
+						<h:outputText value="#{funcionario.data_nascimento}">
+							<f:convertDateTime pattern="yyyy-MM-dd" />
+						</h:outputText>
+					</p:column>
+
+					<p:column 
+						field="cargo.nome" 
+						headerText="Cargo" 
+						filterMatchMode="exact">
+						
+						<f:facet name="filter">
+							<p:selectOneMenu 
+								onchange="PF('tableFuncionario').filter()" 
+								filter="true">
+								
+								<f:selectItem value="#{null}" itemLabel="Todos" />
+								
+								<f:selectItems 
+									value="#{cargoMB.cargos}" 
+									var="cargo" 
+									itemLabel="#{cargo.nome}" 
+									itemValue="#{cargo.nome}" />
+							</p:selectOneMenu>
+						</f:facet>
+					</p:column>
+					
+					<p:column headerText="Avatar" width="100">
+						<p:avatar 
+							icon="pi pi-user" 
+							styleClass="p-mr-2" 
+							size="xlarge" />
+					</p:column>
+					
+					<p:column headerText="Linguagens de Domínio">
+						<p:dataList
+							id="datalist-funcionarios" 
+							var="linguagem"
+							emptyMessage="Nenhuma Linguagem Informada"
+							value="#{funcionario.linguagens_dominio}">
+							
+							<h:outputText value="#{linguagem.nome}" />
+						</p:dataList>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

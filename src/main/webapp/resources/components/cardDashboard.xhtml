@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<h:head>
+		<meta 
+			http-equiv="Content-Type"
+			content="text/html; charset=UTF-8" />
+		<title>Card Dashboard</title>
+		<link rel="stylesheet" href="../styles-componentes/cardDashboard.css" type="text/css" />
+	</h:head>
+	<h:body>
+		<composite:interface>
+			<composite:attribute name="valor" />
+			<composite:attribute name="descricao" />
+			<composite:attribute name="icone" />
+			<composite:attribute name="pattern" />
+		</composite:interface>
+	
+		<composite:implementation>
+			<div id="card">
+				<div>
+					<h:outputText 
+						value="#{cc.attrs.valor}"
+						id="card-valor" 
+						style="font-weight: bold; font-size: 2em;" >
+							
+							<f:convertNumber pattern="#{cc.attrs.pattern}" />
+						</h:outputText>
+					<br></br>
+					<h:outputText 
+						value="#{cc.attrs.descricao }"
+						id="card-texto" />
+				</div>
+				
+				<p:divider layout="vertical" />
+				
+				<div>
+					<i class="#{cc.attrs.icone}" style="font-size: 3em;" />
+				</div>
+			</div>
+			
+		</composite:implementation>
+	</h:body>
+</html>

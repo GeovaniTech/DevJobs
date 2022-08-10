@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+:root {
+	--primary-color: #25242a;
+	--primary-hover: #42404a;
+	--background-page: #e9ecef;
+}
+
+.ui-button.ui-widget {
+	background-color: var(--primary-color);
+	border-color: var(--primaty-color);
+	border-style: none;
+}
+
+.ui-button.ui-widget:hover {
+	background-color: var(--primary-hover);
+	border-color: var(--primary-hover);
+	border-style: none;
+}
+
+.ui-button.ui-widget:focus {
+	box-shadow: 1px 1px 1px 1px var(--primary-hover);
+}
+
+.ui-accordion-header {
+	background-color: var(--primary-color) !important;
+	color: white !important;
+	border-color: var(--primary-color) !important;
+	border-radius: 0 !important;
+	border: 0 !important;
+	margin-top: 10px !important;
+}
+
+.ui-accordion-header:hover {
+	background-color: var(--primary-hover) !important;
+	color: white !important;
+	border-color: var(--primary-color) !important;
+	border-radius: 0 !important;
+	border: 0 !important;
+}
+
+.ui-accordion-header:focus {
+	box-shadow: none !important;
+}
+
+.ui-datatable .ui-state-highlight {
+    background-image: none !important;
+    background-color: var(--primary-hover) !important;
+    color: white !important;
+}
+
+.ui-datalist-content {
+	padding-left: 30px !important;
+	border-color: white !important;
+}
+
+.colorLinha {
+	background-color: #ee391f !important;
+	color: white !important;
+}

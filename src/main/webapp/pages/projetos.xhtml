@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:components="http://java.sun.com/jsf/composite/components">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>DevJobs</title>
+	<link rel="stylesheet" href="../styles-componentes/cardDashboard.css"
+		type="text/css" />
+	
+	<link rel="stylesheet" href="../styles/colors.css"
+		type="text/css" />
+</h:head>
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="content">		
+			<!-- Dialog Novo Requisito -->
+			<components:dialogsCadastrarAlterar 
+				header="Novo Requisito"
+				widgetVar="dialog-novo-requisito" 
+				value_button="Adicionar"
+				funcao_button="#{projetoMB.salvarRequisito()}"
+				novo_update=":accordial:requisitos">
+
+				<p:inputText 
+					value="#{projetoMB.requisitoTo.nome}" 
+					placeholder="Nome"
+					style="margin-top: 5px;" />
+			</components:dialogsCadastrarAlterar>
+
+			<!-- Dialog Alterar Requisito -->
+			<h:panelGrid id="panel-alterar-requisito">
+				<components:dialogsCadastrarAlterar 
+					header="Alterar Requisito"
+					widgetVar="dialog-alterar-requisito" 
+					value_button="Alterar"
+					funcao_button="#{projetoMB.alterarRequisito()}"
+					novo_update=":accordial:requisitos, :accordial:requisitos-alterar">
+
+					<p:inputText 
+						value="#{projetoMB.requisitoAlterarTo.nome}" 
+						placeholder="Nome"
+						style="margin-top: 5px;" />
+				</components:dialogsCadastrarAlterar>
+			</h:panelGrid>
+			
+			<!-- Novo Requisito - Tela Alterar Projeto -->
+			<components:dialogsCadastrarAlterar 
+				header="Novo Requisito"
+				widgetVar="dialog-novo-requisito-alterar"
+				value_button="Adicionar"
+				funcao_button="#{projetoMB.salvarRequisitoAlterar()}"
+				novo_update=":accordial:requisitos-alterar">
+				
+				<p:inputText 
+					value="#{projetoMB.novoRequisitoAlterarTo.nome}" 
+					placeholder="Nome" />
+			</components:dialogsCadastrarAlterar>
+
+			<!-- Painel de Visualização da Descrição -->
+			<h:panelGrid id="dialog-descricao">
+				<p:dialog widgetVar="view-descricao" header="Descrição - #{projetoMB.projetoSelecionado.nome}">
+				<p:outputPanel>
+					<h:outputText escape="false" value="#{projetoMB.projetoSelecionado.descricao}" />
+				</p:outputPanel>
+			</p:dialog>
+			</h:panelGrid>
+			
+			<h2 id="texto-page-atual">DevJobs - Projetos</h2>
+			
+			<h:form id="main-card">
+				<components:cardDashboard 
+					valor="#{projetoMB.projetos_em_desenvolvimento}" 
+					descricao="Projetos em Desen."
+					icone="fi fi-rr-exclamation"
+					pattern="0" />
+
+				<components:cardDashboard 
+					valor="#{projetoMB.projetos_entregues}" 
+					descricao="Projetos Entregues"
+					icone="fi fi-rr-truck-side"
+					pattern="0" />
+
+				<components:cardDashboard 
+					valor="#{projetoMB.desenvolvedoresLivres}"
+					descricao="Desenvolvedores Livres" 
+					icone="fi fi-rr-user"
+					pattern="0" />
+
+				<components:cardDashboard 
+					valor="#{projetoMB.lead_time_medio} dias" 
+					descricao="Lead Time Médio"
+					icone="fi fi-rr-clock"
+					pattern="0" />
+			</h:form>
+	
+			<p:accordionPanel id="accordial" activeIndex="false">
+				<p:tab title="Projeto">
+					<h:form id="novo-projeto">
+						<div id="main-campos">
+							<h:panelGrid columns="2" width="350">
+								<p>Nome do Projeto:</p>
+								<p:inputText 
+									value="#{projetoMB.projetoTo.nome}" 
+									placeholder="Nome" />
+
+								<p>Data Inicial:</p>
+								<p:datePicker 
+									value="#{projetoMB.projetoTo.data_inicio}"
+									placeholder="Data Inicio" 
+									mask="99/99/9999" />
+
+								<p>Data Final:</p>
+								<p:datePicker
+								 	value="#{projetoMB.projetoTo.data_final}"
+									placeholder="Data Final" 
+									mask="99/99/9999" />
+							</h:panelGrid>
+
+							<p:selectManyMenu 
+								value="#{projetoMB.projetoTo.envolvidos}"
+								showCheckbox="true" 
+								filter="true" 
+								style="margin-top: 10px;">
+
+								<f:selectItems 
+									var="funcionario"
+									value="#{funcionarioMB.funcionarios}"
+									itemLabel="#{funcionario.nome}" 
+									itemValue="#{funcionario}" />
+							</p:selectManyMenu>
+
+							<h2 id="h2-painel-novo-projeto">Descrição</h2>
+							<p:textEditor 
+								secure="false" 
+								height="300"
+								value="#{projetoMB.projetoTo.descricao}" />
+						</div>
+						<p:commandButton 
+							value="Cadastrar Projeto"
+							action="#{projetoMB.salvar()}"
+							oncomplete="PF('tableProjeto').filter()"
+							style="margin-top: 10px;" 
+							update="growl, :form-tabela, :accordial, :main-card" />
+							
+							<p:ajax 
+								event="click" 
+								listener="#{projetoMB.setarProjetoSelecionadoNull()}" 
+								oncomplete="PF('tableProjeto').unselectAllRows()" />
+					</h:form>
+
+					<h:form id="requisitos">
+						<h2 id="h2-painel-novo-projeto">Requisitos</h2>
+						<p:commandButton 
+							value="Novo Requisito"
+							onclick="PF('dialog-novo-requisito').show()" icon="pi pi-plus" />
+
+						<div class="requisitos">
+							<p:repeat var="requisito" value="#{projetoMB.projetoTo.requisitos}">
+								<h:panelGrid columns="3" width="300">
+									<p:selectBooleanCheckbox 
+										itemLabel="#{requisito.nome}"
+										value="#{requisito.requisitoHabilitado}">
+										
+										<p:ajax listener="#{projetoMB.atualizarCheckedRequisito(requisito.id, requisito.requisitoHabilitado)}" />
+									</p:selectBooleanCheckbox>
+
+									<p:commandButton
+										action="#{projetoMB.setarRequisitoAlterar(requisito)}"
+										update="panel-alterar-requisito"
+										oncomplete="PF('dialog-alterar-requisito').show()"
+										icon="pi pi-pencil"
+										styleClass="rounded-button ui-button-warning ui-button-flat" />
+
+									<p:commandButton
+										action="#{projetoMB.removerRequisito(requisito)}"
+										icon="pi pi-times" update="@form"
+										styleClass="rounded-button ui-button-danger ui-button-flat" />
+								</h:panelGrid>
+							</p:repeat>
+						</div>
+					</h:form>
+				</p:tab>
+				
+				<p:tab 
+					title="Alterar Projeto" 
+					disabled="#{!projetoMB.possuiProjetoSelecionado()}"
+					id="tab-alterar-projeto">
+					
+					<h:form id="alterar-projeto">
+						<div id="main-campos">
+							<h:panelGrid columns="2" width="350">
+								<p>Nome do Projeto:</p>
+								<p:inputText 
+									value="#{projetoMB.projetoSelecionado.nome}" 
+									placeholder="Nome" />
+
+								<p>Data Inicial:</p>
+								<p:datePicker 
+									value="#{projetoMB.projetoSelecionado.data_inicio}"
+									placeholder="Data Inicio" 
+									mask="99/99/9999" />
+
+								<p>Data Final:</p>
+								<p:datePicker 
+									value="#{projetoMB.projetoSelecionado.data_final}"
+									placeholder="Data Final" 
+									mask="99/99/9999" />
+							</h:panelGrid>
+							
+							<p:selectManyMenu 
+								value="#{projetoMB.envolvidos_id}"
+								showCheckbox="true" 
+								filter="true" 
+								style="margin-top: 10px;">
+
+								<f:selectItems 
+									var="funcionario"
+									value="#{funcionarioMB.funcionarios}"
+									itemLabel="#{funcionario.nome}" 
+									itemValue="#{funcionario.id}" />
+							</p:selectManyMenu>
+
+							<h2 id="h2-painel-novo-projeto">Descrição</h2>
+							<p:textEditor 
+								secure="false" 
+								height="300"
+								value="#{projetoMB.projetoSelecionado.descricao}" />
+						</div>
+						
+						<p:commandButton 
+							value="Alterar Projeto"
+							action="#{projetoMB.alterar(false)}" 
+							oncomplete="PF('tableProjeto').filter()"
+							style="margin-top: 10px;" 
+							update="growl, @form, form-tabela, 
+							:accordial, :main-card" />
+					</h:form>
+					
+					<h:form id="requisitos-alterar">
+						<h2 id="h2-painel-novo-projeto">Requisitos</h2>
+						
+						<p:commandButton 
+							value="Novo Requisito"
+							onclick="PF('dialog-novo-requisito-alterar').show()" 
+							icon="pi pi-plus" />
+
+						<div class="requisitos">
+							<p:repeat var="requisito" value="#{projetoMB.projetoSelecionado.requisitos}">
+								<h:panelGrid columns="3" width="300">
+									<p:selectBooleanCheckbox 
+										itemLabel="#{requisito.nome}"
+										value="#{requisito.requisitoHabilitado}">
+										
+										<p:ajax listener="#{projetoMB.atualizarCheckedRequisito(requisito.id, requisito.requisitoHabilitado)}" />
+									</p:selectBooleanCheckbox>
+
+									<p:commandButton
+										action="#{projetoMB.setarRequisitoAlterar(requisito)}"
+										update="panel-alterar-requisito"
+										oncomplete="PF('dialog-alterar-requisito').show()"
+										icon="pi pi-pencil"
+										styleClass="rounded-button ui-button-warning ui-button-flat">
+										</p:commandButton>
+
+									<p:commandButton
+										action="#{projetoMB.removerRequisitoAlterar(requisito)}"
+										icon="pi pi-times" 
+										update="@form"
+										styleClass="rounded-button ui-button-danger ui-button-flat" />
+								</h:panelGrid>
+							</p:repeat>
+						</div>
+					</h:form>
+				</p:tab>
+			</p:accordionPanel>
+
+			<h:form id="crud">
+				<components:crudTabela
+					excluir="#{projetoMB.remover()}"
+					visibilidadeAdicionar="none"
+					visibilidadeAlterar="none"
+					disable="#{!projetoMB.possuiProjetoSelecionado()}"
+					novo_update=":accordial, form-tabela, :main-card"
+					oncomplete="PF('tableProjeto').filter()" />
+			</h:form>
+
+			<h:form id="form-tabela">
+				<p:dataTable
+					var="projeto"
+					widgetVar="tableProjeto"
+					value="#{projetoMB.projetos}"
+					selection="#{projetoMB.projetoSelecionado}"
+					selectionMode="single"
+					rowKey="#{projeto.id}"
+					filteredValue="#{projetoMB.projetos_filtrados}"
+					globalFilterOnly="#{projetoMB.globalFilterOnly}"
+					rowStyleClass="#{projetoMB.data_atual.time >= projeto.data_final.time and projeto.status != 'Encerrado' ? 'colorLinha' : null}"
+					scrollable="true"
+					scrollHeight="500">
+					
+					
+					<f:facet name="header">
+						<div class="filtros">
+							<p:inputText
+								id="globalFilter" 
+								placeholder="Pesquisar" 
+								onkeyup="PF('tableProjeto').filter()" />
+								
+							<components:filtro
+								selectValue="#{projetoMB.requisitoFiltrado}"
+								funcaoFiltro="#{projetoMB.filtrarRequisito()}"
+								itemLabelTodos="Filtrar Requisitos"
+								listaObjetos="#{projetoMB.requisitos}"
+								oncompleteTabela="PF('tableProjeto').filter()" />
+								
+							<components:filtro
+								selectValue="#{projetoMB.funcionarioFiltrado}"
+								funcaoFiltro="#{projetoMB.filtrarFuncionario()}"
+								itemLabelTodos="Filtrar Funcionário"
+								listaObjetos="#{funcionarioMB.funcionarios}"
+								oncompleteTabela="PF('tableProjeto').filter()" />
+						</div>
+					</f:facet>
+					
+					<p:ajax 
+						event="rowSelect" 
+						update=":crud,  :accordial, :dialog-descricao, form-tabela"/>
+							
+					<p:ajax 
+						event="rowUnselect" 
+						update=":crud, :accordial, :dialog-descricao, form-tabela" />
+					
+					<p:ajax 
+						event="rowDblselect" 
+						update=":crud, :accordial, :dialog-descricao, form-tabela" 
+						listener="#{projetoMB.setarProjetoSelecionadoNull()}"
+						oncomplete="PF('tableProjeto').unselectAllRows()" />
+					
+					<p:column field="nome" headerText="Nome" >
+						<f:facet name="filter">
+							<p:selectOneMenu filter="true" onchange="PF('tableProjeto').filter()">
+								<f:selectItem value="#{null}" itemLabel="Todos" />
+								
+								<f:selectItems 
+									value="#{projetoMB.projetos}" 
+									var="projeto_filtro" 
+									itemLabel="#{projeto_filtro.nome}" 
+									itemValue="#{projeto_filtro.nome}" />
+							</p:selectOneMenu>
+						</f:facet>
+					</p:column>
+					<p:column headerText="Descrição">
+						<p:commandButton 
+							value="Visualizar"
+							disabled="#{projeto.nome == projetoMB.projetoSelecionado.nome ? false : true}" 
+							onclick="PF('view-descricao').show()"
+							icon="pi pi-eye" />
+					</p:column>
+						
+					<p:column field="data_inicio" headerText="Data Inicial">
+						<h:outputText value="#{projeto.data_inicio}">
+							<f:convertDateTime pattern="yyyy-MM-dd" />
+						</h:outputText>
+					</p:column>
+					<p:column field="data_final" headerText="Data Final">
+						<h:outputText value="#{projeto.data_final}">
+							<f:convertDateTime pattern="yyyy-MM-dd" />
+						</h:outputText>
+					</p:column>
+						
+					<p:column headerText="Envolvidos">
+						<p:dataList var="funcionario" value="#{projeto.envolvidos}">
+							<h:outputText value="#{funcionario.nome}" />
+						</p:dataList>
+					</p:column>
+					
+					<p:column headerText="Requisitos">
+						<p:dataList var="req" value="#{projeto.requisitos}">
+							<h:outputText value="#{req.nome}" />
+						</p:dataList>
+					
+					</p:column>
+					
+					<p:column field="status" headerText="Status" filterMatchMode="exact">
+						<f:facet name="filter">
+							<p:selectOneMenu onchange="PF('tableProjeto').filter()">
+								<f:selectItem itemLabel="Todos" itemValue="#{null}"/>
+								<f:selectItem itemLabel="Planejamento" itemValue="Planejamento"/>
+								<f:selectItem itemLabel="Execução" itemValue="Execução"/>
+								<f:selectItem itemLabel="Encerrado" itemValue="Encerrado"/>
+							</p:selectOneMenu>
+						</f:facet>
+					</p:column>
+					
+					<p:column>
+						<p:commandButton 
+							value="Finalizar Projeto" 
+							disabled="#{projeto.nome == projetoMB.projetoSelecionado.nome ? false : true}" 
+							oncomplete="PF('tableProjeto').filter()"
+							action="#{projetoMB.alterar(true)}" 
+							update="growl, @form, form-tabela, 
+							:accordial, :main-card"
+							icon="pi pi-check" 
+							styleClass="ui-button-success"/>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

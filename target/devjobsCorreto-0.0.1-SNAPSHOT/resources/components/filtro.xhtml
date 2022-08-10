@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:components="http://java.sun.com/jsf/composite/components"
+         xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Filtro</title>
+</h:head>
+<h:body>
+	<composite:interface>
+		<composite:attribute name="selectValue" />
+		<composite:attribute name="oncompleteTabela" />
+		<composite:attribute name="listaObjetos" />
+		<composite:attribute name="itemLabelTodos" />
+		<composite:attribute name="funcaoFiltro" method-signature="void filtro()" />
+	</composite:interface>
+	
+	<composite:implementation>
+		<p:selectOneMenu value="#{cc.attrs.selectValue}" filter="true">
+				<p:ajax 
+					event="change" 
+					listener="#{cc.attrs.funcaoFiltro}" 
+					oncomplete="#{cc.attrs.oncompleteTabela}" 
+					update="form-tabela, growl" />
+					
+				<f:selectItem 
+					value="#{null}" 
+					itemLabel="#{cc.attrs.itemLabelTodos}" />
+				
+				<f:selectItems 
+					value="#{cc.attrs.listaObjetos}" 
+					var="objeto"
+					itemLabel="#{objeto.nome}" 
+					itemValue="#{objeto.id}" />
+		</p:selectOneMenu>
+	</composite:implementation>
+</h:body>
+</html>

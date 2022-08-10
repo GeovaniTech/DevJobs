@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+#main-toolbar {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+#div-opcoes {
+	margin: 10px;
+}
+
+#div-opcoes button {
+	margin-left: 5px;
+}

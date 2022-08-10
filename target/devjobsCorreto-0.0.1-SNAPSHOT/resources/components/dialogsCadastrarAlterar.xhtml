@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	<h:head>
+		<meta http-equiv="Content-Type"
+			content="text/html; charset=UTF-8" />
+		<title>Dialog Cadastrar/Alterar</title>
+	</h:head>
+	<h:body>
+		<composite:interface>
+			<composite:attribute name="widgetVar" />
+			<composite:attribute name="header" />
+			<composite:attribute name="value_button" />
+			<composite:attribute name="funcao_button" method-signature="void add()" />
+			<composite:attribute name="width" />
+			<composite:attribute name="novo_update" />
+			<composite:attribute name="oncomplete" />
+		</composite:interface>
+		
+		<composite:implementation>
+			<p:dialog
+				header="#{cc.attrs.header}" 
+				widgetVar="#{cc.attrs.widgetVar}"
+				showEffect="fade" 
+				modal="true" 
+				style="padding: 5px;" 
+				width="#{cc.attrs.width}">
+
+				<h:form class="main-campos">
+					<composite:insertChildren />
+					<p:commandButton
+						value="#{cc.attrs.value_button}"
+						action="#{cc.attrs.funcao_button}" 
+						styleClass="ui-button-success"
+						style="margin-top: 15px;"
+						oncomplete="#{cc.attrs.oncomplete}"
+						ajax="true"
+						update="growl, @form, crud, form-tabela, #{cc.attrs.novo_update}">
+					</p:commandButton>
+				</h:form>
+			</p:dialog>
+		</composite:implementation>
+	</h:body>
+</html>

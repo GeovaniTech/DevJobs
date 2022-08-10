@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	<html 
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+		xmlns:composite="http://java.sun.com/jsf/composite"
+		xmlns:components="http://java.sun.com/jsf/composite/components">
+		<h:head>
+			<meta 
+				http-equiv="Content-Type"
+				content="text/html; charset=UTF-8" />
+			<title>Barra de Opções e Pesquisa</title>
+		</h:head>
+		<h:body>
+			<composite:interface>
+				<composite:attribute name="adicionar" shortDescription="Função para adicionar" />
+				<composite:attribute name="alterar" shortDescription="Função para alterar" />
+				<composite:attribute name="disable" shortDescription="Visibilidade dos botões adicionar e alterar" />
+				<composite:attribute name="excluir" shortDescription="Função para excluir" method-signature="void excluir()" />
+				<composite:attribute name="visibilidadeAlterar" shortDescription="Botão visivel ou não" />
+				<composite:attribute name="visibilidadeAdicionar" shortDescription="Botão visivel ou não" />
+				<composite:attribute name="novo_update" shortDescription="Atualizar componente" />
+				<composite:attribute name="oncomplete" />
+				<composite:attribute name="unselectRow" />
+				<composite:attribute name="nullObjeto" method-signature="void nullObjeto()" shortDescription="Função para setar objeto selecionado como null" />
+
+			</composite:interface>
+
+			<composite:implementation>
+				<div id="main-toolbar">
+					<div id="div-opcoes">
+						<p:commandButton 
+							value="Adicionar"
+							id="btn-adicionar"
+							action="#{cc.attrs.nullObjeto}"
+							onclick="#{cc.attrs.adicionar}"
+							oncomplete="#{cc.attrs.unselectRow}" 
+							update=":crud, form-tabela, growl, #{cc.attrs.novo_update}"
+							icon="pi pi-plus"
+							style="display: #{cc.attrs.visibilidadeAdicionar};"> 
+						</p:commandButton>
+
+						<p:commandButton 
+							value="Alterar"
+							onclick="#{cc.attrs.alterar}"
+							disabled="#{cc.attrs.disable}"
+							update=":crud, form-tabela, growl, #{cc.attrs.novo_update}"
+							icon="pi pi-pencil" id="btn-alterar"
+							style="display: #{cc.attrs.visibilidadeAlterar};" />
+
+						<p:commandButton 
+							value="Excluir"
+							action="#{cc.attrs.excluir}" 
+							disabled="#{cc.attrs.disable}"
+							icon="pi pi-times" id="btn-deletar"
+							update=":crud, :form-tabela, growl, #{cc.attrs.novo_update}" 
+							oncomplete="#{cc.attrs.oncomplete}"
+							styleClass="ui-button-danger" />
+					</div>
+				</div>
+			</composite:implementation>
+		</h:body>
+
+</html>
